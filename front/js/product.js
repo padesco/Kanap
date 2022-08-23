@@ -57,15 +57,14 @@ quantitySelection.addEventListener('input', function(event) {
 let addToCart = document.getElementById('addToCart');
 addToCart.addEventListener('click', () => {
     if (
-        productSelection.quantity < 1 || productSelection.quantity > 100 || productSelection.color === undefined
+        productSelection.quantity < 1 || productSelection.quantity > 100 || productSelection.color === '' || productSelection.color === undefined
     ) {
         alert (
             'Veuillez renseigner une couleur et une quantité valide, entre 1 et 100 !'
         );
     } else {
         console.log(productSelection);
+        alert('Votre sélection a été ajouté au panier, merci !');
     }
 });
 
-let selectionCart = JSON.stringify(productSelection);
-localStorage.setItem("cart", selectionCart);
