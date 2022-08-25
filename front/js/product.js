@@ -16,7 +16,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
     .then( data => data.json())
     .then( productId => {
         console.log(productId)
-        document.getElementsByClassName('item__img').innerHTML = `<img src="${productId.imageUrl}" alt="${productId.altTxt}">`;
+        document.querySelector('.item__img').innerHTML = `<img src="${productId.imageUrl}" alt="${productId.altTxt}">`;
         document.querySelector('title').textContent = `${productId.name}`
         document.getElementById('title').textContent = `${productId.name}`;
         document.getElementById('price').textContent = `${productId.price}`;

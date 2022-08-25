@@ -17,4 +17,9 @@ fetch("http://localhost:3000/api/products")
                                                                 </article>
                                                             </a>`
         };
+    })
+    .catch( function(err) {
+        let error = document.getElementById("items");
+        error.innerText = "Une erreur est survenue, veuillez nous en excuser!";
+        console.log("erreur récupéré");
     });
