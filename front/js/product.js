@@ -1,5 +1,5 @@
 // Array pour le panier
-const productSelection = [];
+const productSelection = {};
 // on récupère l'url courante
 const urlId = window.location.search;
 // la propriété "urlSearchParams" de "urlId" nous retourne un objet de type "URLSearchParams"
@@ -57,14 +57,16 @@ quantitySelection.addEventListener('input', function(event) {
 let addToCart = document.getElementById('addToCart');
 addToCart.addEventListener('click', () => {
     if (
-        productSelection.quantity < 1 || productSelection.quantity > 100 || productSelection.color === '' || productSelection.color === undefined
+        productSelection.quantity > 0
+        && productSelection.quantity <= 100
+        && productSelection.color !== ''
     ) {
+        console.log(productSelection);
+        alert('Votre sélection a été ajouté au panier, merci !');
+    } else {
         alert (
             'Veuillez renseigner une couleur et une quantité valide, entre 1 et 100 !'
         );
-    } else {
-        console.log(productSelection);
-        alert('Votre sélection a été ajouté au panier, merci !');
     }
 });
 
