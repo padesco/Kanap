@@ -1,5 +1,3 @@
-// Array pour le panier
-const productSelection = {};
 // on récupère l'url courante
 const urlId = window.location.search;
 // la propriété "urlSearchParams" de "urlId" nous retourne un objet de type "URLSearchParams"
@@ -7,7 +5,6 @@ const urlSearchParams = new URLSearchParams(urlId);
 // on récupére la valeur de 'id'
 const id = urlSearchParams.get('id');
 console.log(id);
-productSelection.id = id;
 
 
 // créer une requête API fetch pour chaque 'id'
@@ -26,6 +23,12 @@ fetch(`http://localhost:3000/api/products/${id}`)
             document.getElementById('colors').innerHTML += `<option value="${color}">${color}</option>`;
         }
 
+    })
+    // Message d'erreur en cas de problème
+    .catch( function(err) {
+        let error = document.querySelector(".item__img");
+        error.innerHTML = `<p style="text-align:center">Une erreur est survenue, veuillez nous en excuser! Notre équipe met tout en oeuvre pour régler ce problème dans les plus bref délais.</p>`;
+        console.log("erreur chargement du produit");
     });
 
 
@@ -35,9 +38,7 @@ let colorSelection = document.getElementById('colors');
 colorSelection.addEventListener('input', function(event) {
     // on récupère la valeur de la cible
     let colorProduct = event.target.value;
-    // on ajoute la couleur à l'object productSelection
-    productSelection.color = colorProduct;
-    console.log(productSelection.color);
+    console.log(colorProduct);
     event.preventDefault();
 });
 
@@ -47,22 +48,36 @@ let quantitySelection = document.getElementById('quantity');
 quantitySelection.addEventListener('input', function(event) {
     // on récupère la valeur de la cible
     let quantityProduct = event.target.value;
-    // on ajoute la quantité à l'object productSelection
-    productSelection.quantity = quantityProduct;
-    console.log(productSelection.quantity);
+    console.log(quantityProduct);
     event.preventDefault();
 });
 
 // Clique pour ajouter au panier
 let addToCart = document.getElementById('addToCart');
-addToCart.addEventListener('click', () => {
+addToCart.addEventListener('click', function() {
+    error.innerText = "";
     if (
-        productSelection.quantity > 0
-        && productSelection.quantity <= 100
-        && productSelection.color !== ''
+        quantityProduct > 0
+        && quantityProduct <= 100
+        && colorProduct !== ''
     ) {
-        console.log(productSelection);
+        // Objet nouveau produit
+        let productSelection = {
+            _id : id,
+            quantity : quantityProduct,
+            colors : colorProduct
+        };
+        // Si nouveau produit, on le parse en JSON pour ajouter de nouveaux produits
+        if (localStorage.getItem("products") !== null) {
+            productSelection = JSON.parse(localStorage.getItem("products"));
+        }
+        // Fonction future pour ajouter des doublons
+        
+        // Push des nouveaux produits dans le panier
+        productSelection.push(productSelection);
+        localStorage.setItem("products", JSON.stringify(productSelection));
         alert('Votre sélection a été ajouté au panier, merci !');
+        console.log(productSelection);
     } else {
         alert (
             'Veuillez renseigner une couleur et une quantité valide, entre 1 et 100 !'
