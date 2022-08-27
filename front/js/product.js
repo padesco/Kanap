@@ -27,7 +27,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
     // Message d'erreur en cas de problème
     .catch( function(err) {
         let error = document.querySelector(".item__img");
-        error.innerHTML = `<p style="text-align:center">Une erreur est survenue, veuillez nous en excuser! Notre équipe met tout en oeuvre pour régler ce problème dans les plus bref délais.</p>`;
+        error.innerHTML = `<h2 style="text-align:center">Une erreur est survenue, veuillez nous en excuser! <br> Notre équipe met tout en oeuvre pour régler ce problème dans les plus bref délais.</h2>`;
         console.log("erreur chargement du produit");
     });
 
