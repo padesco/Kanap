@@ -62,38 +62,51 @@ console.log(addToCart);
 // Ecoute du bouton
 addToCart.addEventListener("click", (event) => {
     event.preventDefault();
+    // Condition pour pouvoir envoyer dans le panier
+    if (
+        quantitySelection > 0
+        && quantitySelection <= 100
+        && colorSelection !== ''
+    ) {
+        // On crée un objet pour y mettre l'ID, la quantité et la couleur sélectionné
+        let productSelection = {
+            _id: id,
+            colors: colorSelection,
+            quantity: quantitySelection
+            };
+            console.log(productSelection);
+        
+            //----Le local Storage----//
+        //Déclaration de la variable "productStorage" dans laquelle on met les produits sélectionnés
+        let productStorage = JSON.parse(localStorage.getItem("products"));
+        // JSON.parse pour convertir les données au format JSON qui sont dans le local storage
+        console.log(productStorage);
+        
+        // Fonction ajouter produit sélectionné dans le localStorage
+        const addToStorage = () => {
+            // Ajout de l'objet dans le localStorage
+            productStorage.push(productSelection);
+            // Transformation en format JSON et envoyer dans la clé "products" du localStorage
+            localStorage.setItem("products", JSON.stringify(productStorage));
+        };
 
-    // Récupération des valeurs de la sélection
-    let productSelection = {
-    _id: id,
-    colors: colorSelection,
-    quantity: quantitySelection
-    };
-    console.log(productSelection);
+        // si il y a des produits déjà enregistré dans le local storage
+        if (productStorage){
+            console.log("il y a déjà un produit dans le local storage");
+            addToStorage();
+            console.log(productStorage);
+            alert('Votre sélection a été ajouté à votre panier existant, merci!');
+        } else {
+            productStorage = [];
+            addToStorage();
+            alert('Votre sélection a été mise dans votre panier, merci!');
+        }
 
-    //----Le local Storage----//
-//Déclaration de la variable "productStorage" dans laquelle on met les clés et valeurs
-let productStorage = JSON.parse(localStorage.getItem("products"));
-// JSON.parse pour convertir les données au format JSON qui sont dans le local storage
-console.log(productStorage);
-
-// Fonction ajouter produit sélectionné dans le localStorage
-const addToStorage = () => {
-    // Ajout de l'objet dans le localStorage
-    productStorage.push(productSelection);
-    // Transformation en format JSON et envoyer dans la clé "products" du localStorage
-    localStorage.setItem("products", JSON.stringify(productStorage));
-};
-
-// si il y a des produits déjà enregistré dans le local storage
-if (productStorage){
-    console.log("il y a déjà un produit dans le local storage");
-    addToStorage();
-    console.log(productStorage);
-    alert('Votre sélection a été ajouté au panier, merci!')
-} else {
-    productStorage = [];
-    addToStorage();
-    console.log(productStorage);
-}
+    // Alert si les conditions pour envoyer dans le panier ne sont pas respecté
+    } else {
+        alert (
+            'Veuillez renseigner une couleur et une quantité valide, entre 1 et 100 !'
+        );
+    }
+    
 });
