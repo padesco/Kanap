@@ -6,7 +6,6 @@ const urlSearchParams = new URLSearchParams(urlId);
 const id = urlSearchParams.get('id');
 console.log(id);
 
-
 // créer une requête API fetch pour chaque 'id'
 fetch(`http://localhost:3000/api/products/${id}`)
     // récupérer et interpréter le résultat au format JSON
@@ -27,7 +26,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
     // Message d'erreur en cas de problème
     .catch( function(err) {
         let error = document.querySelector(".item__img");
-        error.innerHTML = `<p style="text-align:center">Une erreur est survenue, veuillez nous en excuser! Notre équipe met tout en oeuvre pour régler ce problème dans les plus bref délais.</p>`;
+        error.innerHTML = `<h2 style="text-align:center">Une erreur est survenue, veuillez nous en excuser! <br> Notre équipe met tout en oeuvre pour régler ce problème dans les plus bref délais.</h2>`;
         console.log("erreur chargement du produit");
     });
 
@@ -38,7 +37,8 @@ let colorSelection = document.getElementById('colors');
 colorSelection.addEventListener('input', function(event) {
     // on récupère la valeur de la cible
     let colorProduct = event.target.value;
-    console.log(colorProduct);
+    colorSelected = colorProduct;
+    console.log(colorSelected);
     event.preventDefault();
 });
 
@@ -48,40 +48,76 @@ let quantitySelection = document.getElementById('quantity');
 quantitySelection.addEventListener('input', function(event) {
     // on récupère la valeur de la cible
     let quantityProduct = event.target.value;
-    console.log(quantityProduct);
+    quantitySelected = quantityProduct;
+    console.log(quantitySelected);
     event.preventDefault();
 });
 
-// Clique pour ajouter au panier
-let addToCart = document.getElementById('addToCart');
-addToCart.addEventListener('click', function() {
-    error.innerText = "";
-    if (
-        quantityProduct > 0
-        && quantityProduct <= 100
-        && colorProduct !== ''
-    ) {
-        // Objet nouveau produit
-        let productSelection = {
-            _id : id,
-            quantity : quantityProduct,
-            colors : colorProduct
-        };
-        // Si nouveau produit, on le parse en JSON pour ajouter de nouveaux produits
-        if (localStorage.getItem("products") !== null) {
-            productSelection = JSON.parse(localStorage.getItem("products"));
-        }
-        // Fonction future pour ajouter des doublons
-        
-        // Push des nouveaux produits dans le panier
-        productSelection.push(productSelection);
-        localStorage.setItem("products", JSON.stringify(productSelection));
-        alert('Votre sélection a été ajouté au panier, merci !');
-        console.log(productSelection);
+
+//--------------------------
+//----Le Local Storage----//
+//--------------------------
+
+// fonction pour enregistrer dans le local storage
+function saveCart(cart) {
+    // transformation du tableau en chaîne de caractères
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// fonction pour récupérer les données du local storage
+function getCart() {
+    let cart = localStorage.getItem("cart");
+    // si il n'y a rien retourne un tableau vide
+    if (cart == null) {
+        return [];
+    // sinon retourne la chaîne de caractère en tableau
     } else {
-        alert (
-            'Veuillez renseigner une couleur et une quantité valide, entre 1 et 100 !'
-        );
+        return JSON.parse(cart);
+    }
+}
+
+// fonction d'ajout de produit dans le local storage
+function addCart(product) {
+    let cart = getCart();
+    let foundProduct = cart.find(p => p.id == product.id);
+    // si il y a un produit identique (id et couleur) alors on augmente la quantité
+    if (foundProduct != undefined) {
+        foundProduct.quantity++;
+    // sinon on rajoute un autre produit dans le local storage
+    } else {
+        product.quantity = 1;
+        cart.push(product);
+    }
+    // on envoi dans le local storage
+    saveCart(cart);
+}
+
+
+//--------------------------------------------------
+//----Envoi des éléments dans le local storage----//
+//--------------------------------------------------
+
+// Clique pour ajouter au panier
+const addToCart = document.getElementById('addToCart');
+addToCart.addEventListener('click', () => {
+
+    // Condition pour pouvoir envoyer la sélection dans le panier
+    if (
+        quantitySelected > 0
+        && quantitySelected <= 100
+        && colorSelected !== ''
+    ) {
+        // On crée un objet pour y mettre l'ID, la quantité et la couleur sélectionné
+        let product = {
+            _id: id,
+            colors: colorSelected,
+            quantity: quantitySelected
+        };
+        console.log(product);
+        addCart(product);
+    } else {
+        // Alert si les conditions pour envoyer dans le panier ne sont pas respectées
+        alert ('Veuillez renseigner une couleur et une quantité valide, entre 1 et 100 !');
     }
 });
 
