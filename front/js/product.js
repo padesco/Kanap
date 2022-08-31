@@ -4,14 +4,12 @@ const urlId = window.location.search;
 const urlSearchParams = new URLSearchParams(urlId);
 // on récupére la valeur de 'id'
 const id = urlSearchParams.get('id');
-console.log(id);
 
 // créer une requête API fetch pour chaque 'id'
 fetch(`http://localhost:3000/api/products/${id}`)
     // récupérer et interpréter le résultat au format JSON
     .then( data => data.json())
     .then( productId => {
-        console.log(productId)
         document.querySelector('.item__img').innerHTML = `<img src="${productId.imageUrl}" alt="${productId.altTxt}">`;
         document.querySelector('title').textContent = `${productId.name}`
         document.getElementById('title').textContent = `${productId.name}`;
@@ -37,8 +35,7 @@ let colorSelection = document.getElementById('colors');
 colorSelection.addEventListener('input', function(event) {
     // on récupère la valeur de la cible
     let colorProduct = event.target.value;
-    colorSelected = colorProduct;
-    console.log(colorSelected);
+    console.log(colorProduct);
     event.preventDefault();
 });
 
@@ -48,8 +45,7 @@ let quantitySelection = document.getElementById('quantity');
 quantitySelection.addEventListener('input', function(event) {
     // on récupère la valeur de la cible
     let quantityProduct = event.target.value;
-    quantitySelected = quantityProduct;
-    console.log(quantitySelected);
+    console.log(quantityProduct);
     event.preventDefault();
 });
 
@@ -79,7 +75,11 @@ function getCart() {
 // fonction d'ajout de produit dans le local storage
 function addCart(product) {
     let cart = getCart();
-    let foundProduct = cart.find(p => p.id == product.id);
+    console.log(cart);
+    const values = Object.values(cart);
+    console.log(values);
+    let foundProduct = values.find(p => p._id == product._id);
+    console.log(foundProduct);
     // si il y a un produit identique (id et couleur) alors on augmente la quantité
     if (foundProduct != undefined) {
         foundProduct.quantity++;
@@ -99,19 +99,18 @@ function addCart(product) {
 
 // Clique pour ajouter au panier
 const addToCart = document.getElementById('addToCart');
-addToCart.addEventListener('click', () => {
-
+addToCart.addEventListener('click', (event) => {
+    event.preventDefault();
     // Condition pour pouvoir envoyer la sélection dans le panier
     if (
-        quantitySelected > 0
-        && quantitySelected <= 100
-        && colorSelected !== ''
-    ) {
-        // On crée un objet pour y mettre l'ID, la quantité et la couleur sélectionné
+        quantityProduct > 0
+        && quantityProduct <= 100
+        && colorProduct !== ''
+    ) { // On crée un objet pour y mettre l'ID, la quantité et la couleur sélectionné
         let product = {
             _id: id,
-            colors: colorSelected,
-            quantity: quantitySelected
+            colors: colorProduct,
+            quantity: quantityProduct
         };
         console.log(product);
         addCart(product);
