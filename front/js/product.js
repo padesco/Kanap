@@ -35,8 +35,8 @@ let colorSelection = document.getElementById('colors');
 colorSelection.addEventListener('input', function(event) {
     // on récupère la valeur de la cible
     let colorProduct = event.target.value;
-    console.log(colorProduct);
-    event.preventDefault();
+    colorSelection = colorProduct;
+    console.log(colorSelection);
 });
 
 // Sélection de la quantité
@@ -45,8 +45,8 @@ let quantitySelection = document.getElementById('quantity');
 quantitySelection.addEventListener('input', function(event) {
     // on récupère la valeur de la cible
     let quantityProduct = event.target.value;
-    console.log(quantityProduct);
-    event.preventDefault();
+    quantitySelection = quantityProduct;
+    console.log(quantitySelection);
 });
 
 
@@ -99,18 +99,17 @@ function addCart(product) {
 
 // Clique pour ajouter au panier
 const addToCart = document.getElementById('addToCart');
-addToCart.addEventListener('click', (event) => {
-    event.preventDefault();
+addToCart.addEventListener('click', () => {
     // Condition pour pouvoir envoyer la sélection dans le panier
     if (
-        quantityProduct > 0
-        && quantityProduct <= 100
-        && colorProduct !== ''
+        quantitySelection > 0
+        && quantitySelection <= 100
+        && colorSelection !== ''
     ) { // On crée un objet pour y mettre l'ID, la quantité et la couleur sélectionné
         let product = {
             _id: id,
-            colors: colorProduct,
-            quantity: quantityProduct
+            colors: colorSelection,
+            quantity: quantitySelection
         };
         console.log(product);
         addCart(product);
