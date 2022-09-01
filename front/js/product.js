@@ -30,23 +30,21 @@ fetch(`http://localhost:3000/api/products/${id}`)
 
 
 // Choix de la couleur
-let colorSelection = document.getElementById('colors');
+let colorSelected = document.getElementById('colors');
 // écoute de l'événement sur l'élément (#colors)
-colorSelection.addEventListener('input', function(event) {
+colorSelected.addEventListener('input', function(event) {
     // on récupère la valeur de la cible
     let colorProduct = event.target.value;
-    colorSelection = colorProduct;
-    console.log(colorSelection);
+    colorSelected = colorProduct;
 });
 
 // Sélection de la quantité
-let quantitySelection = document.getElementById('quantity');
+let quantitySelected = document.getElementById('quantity');
 // écoute de l'événement sur l'élément (#quantity)
-quantitySelection.addEventListener('input', function(event) {
+quantitySelected.addEventListener('input', function(event) {
     // on récupère la valeur de la cible
     let quantityProduct = event.target.value;
-    quantitySelection = quantityProduct;
-    console.log(quantitySelection);
+    quantitySelected = parseInt(quantityProduct);
 });
 
 
@@ -74,19 +72,28 @@ function getCart() {
 
 // fonction d'ajout de produit dans le local storage
 function addCart(product) {
-    let cart = getCart();
-    console.log(cart);
-    const values = Object.values(cart);
-    console.log(values);
-    let foundProduct = values.find(p => p._id == product._id);
-    console.log(foundProduct);
+    let cart = [];
+    cart = getCart();
+    let foundProduct = cart.find(p => p._id == product._id && p.colors == product.colors);
     // si il y a un produit identique (id et couleur) alors on augmente la quantité
     if (foundProduct != undefined) {
-        foundProduct.quantity++;
+        // on définie la nouvelle quantité
+        let newQuantity = foundProduct.quantity + product.quantity;
+        foundProduct.quantity = newQuantity;
+        // si la quantité totale pour un produit fait plus de 100
+        if (foundProduct.quantity > 100) {
+            // on revient à l'ancienne quantité
+            let oldQuantity = foundProduct.quantity - product.quantity;
+            foundProduct.quantity = oldQuantity;
+            alert ('La quantité pour ce produit est trop importante. Le maximum pour un produit est de 100 unités ! Pour voir la quantité totale pour ce produit consulté votre panier.')
+            // sinon on ajoute la quantité
+        } else {
+            alert ('La quantité pour ce produit a été modifiée dans votre panier, merci!')
+        }
     // sinon on rajoute un autre produit dans le local storage
     } else {
-        product.quantity = 1;
         cart.push(product);
+        alert ('Le produit vient d\'être ajouté à votre panier, merci !')
     }
     // on envoi dans le local storage
     saveCart(cart);
@@ -102,14 +109,14 @@ const addToCart = document.getElementById('addToCart');
 addToCart.addEventListener('click', () => {
     // Condition pour pouvoir envoyer la sélection dans le panier
     if (
-        quantitySelection > 0
-        && quantitySelection <= 100
-        && colorSelection !== ''
+        quantitySelected > 0
+        && quantitySelected <= 100
+        && colorSelected !== ''
     ) { // On crée un objet pour y mettre l'ID, la quantité et la couleur sélectionné
         let product = {
             _id: id,
-            colors: colorSelection,
-            quantity: quantitySelection
+            colors: colorSelected,
+            quantity: quantitySelected
         };
         console.log(product);
         addCart(product);

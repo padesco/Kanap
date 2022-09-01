@@ -1,11 +1,16 @@
+// fonction pour enregistrer dans le local storage
 function saveCart(cart) {
+    // transformation du tableau en chaîne de caractères
     localStorage.setItem("cart", JSON.stringify(cart));
 }
 
+// fonction pour récupérer les données du local storage
 function getCart() {
     let cart = localStorage.getItem("cart");
+    // si il n'y a rien retourne un tableau vide
     if (cart == null) {
         return [];
+    // sinon retourne la chaîne de caractère en tableau
     } else {
         return JSON.parse(cart);
     }
@@ -34,7 +39,7 @@ function changeQuantity(product, quantity) {
     let foundProduct = cart.find(p => p.id == product.id);
     if (foundProduct != undefined) {
         foundProduct.quantity += quantity;
-        if (foundProduct.quantity <= 0) {
+        if (foundProduct.quantity > 100) {
             removeFromCart(foundProduct);
         } else {
             saveCart(cart);
