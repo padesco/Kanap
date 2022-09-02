@@ -6,7 +6,8 @@ function saveCart(cart) {
 
 // fonction pour récupérer les données du local storage
 function getCart() {
-    let cart = localStorage.getItem("cart");
+    let cart = [];
+    cart = localStorage.getItem("cart");
     // si il n'y a rien retourne un tableau vide
     if (cart == null) {
         return [];
@@ -21,9 +22,9 @@ function getCart() {
 fetch("http://localhost:3000/api/products")
  // récupérer et interpréter le résultat au format JSON
  .then( data => data.json())
- .then( productList => {
+ .then( itemsList => {
     // Appel de la fonction productCart
-     productCart(productList);
+     productCart(itemsList);
  })
  // Message d'erreur en cas de problème
  .catch( function(err) {
@@ -32,34 +33,33 @@ fetch("http://localhost:3000/api/products")
  });
 
 // On récupère les informations de l'API avec la fonction productCart
-function productCart(productList) {
+function productCart(itemsList) {
     // on récupère les éléments du localStorage
-    let cart = [];
-    cart = getCart();
+    let cart = getCart();
 // Si le panier est vide
 if (cart === null) {
     document.querySelector("main").innerHTML = `<h2 style="text-align:center">Votre panier est vide.</h2>`;
 } else {
     // Si le panier n'est pas vide: on récupère les produits
-    for (product of productList) {
+    for (item of itemsList) {
         // On crée une boucle pour récupèrer les éléments du local storage
-        for (item of cart) {
-            if (product._id === item._id) {
+        for (product of cart) {
+            if (item._id === product._id) {
                 // Création et ajout des valeurs correspondante
-                document.getElementById('cart__items').innerHTML += `<article class="cart__item" data-id="${item._id}" data-color="${item.colors}">
+                document.getElementById('cart__items').innerHTML += `<article class="cart__item" data-id="${product._id}" data-color="${product.colors}">
                                                                         <div class="cart__item__img">
-                                                                        <img src="${product.imageUrl}" alt="${product.altTxt}">
+                                                                        <img src="${item.imageUrl}" alt="${item.altTxt}">
                                                                         </div>
                                                                         <div class="cart__item__content">
                                                                         <div class="cart__item__content__description">
-                                                                            <h2>${product.name}</h2>
-                                                                            <p>${item.colors}</p>
-                                                                            <p>${product.price} €</p>
+                                                                            <h2>${item.name}</h2>
+                                                                            <p>${product.colors}</p>
+                                                                            <p>${item.price} €</p>
                                                                         </div>
                                                                         <div class="cart__item__content__settings">
                                                                             <div class="cart__item__content__settings__quantity">
                                                                             <p>Qté : </p>
-                                                                            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.quantity}">
+                                                                            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
                                                                             </div>
                                                                             <div class="cart__item__content__settings__delete">
                                                                             <p class="deleteItem">Supprimer</p>
@@ -70,21 +70,20 @@ if (cart === null) {
             }
         }
     }
-    removeFromCart();
+    removeFromCart(product);
 }
 }
 
-function removeFromCart() {
+function removeFromCart(product) {
 const deleteItem = document.querySelector('.deleteItem');
-deleteItem.forEach((deleteItem) => {
 deleteItem.addEventListener('click', () => {
-    console.log(deleteItem);
-    if (window.confirm('Voulez vous supprimer cet article?')) {
+    let deleteProduct = deleteItem.closest('article');
+    console.log(deleteProduct);
+    if (window.confirm('Êtes-vous sûre de vouloir supprimer cet article?')) {
         let cart = getCart();
-        let foundItem = cart.find(p => p._id == product._id && p.colors == product.colors);
-        window.localStorage.removeItem(foundItem);
-        saveCart(cart);
+        let foundProduct = cart.find(p => p._id == product._id && p.colors == product.colors);
+        console.log(foundProduct);
+        window.localStorage.removeItem(foundProduct);
     }
-})
 })
 }

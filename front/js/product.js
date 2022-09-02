@@ -60,7 +60,8 @@ function saveCart(cart) {
 
 // fonction pour récupérer les données du local storage
 function getCart() {
-    let cart = localStorage.getItem("cart");
+    let cart = [];
+    cart = localStorage.getItem("cart");
     // si il n'y a rien retourne un tableau vide
     if (cart == null) {
         return [];
@@ -72,8 +73,7 @@ function getCart() {
 
 // fonction d'ajout de produit dans le local storage
 function addCart(product) {
-    let cart = [];
-    cart = getCart();
+    let cart = getCart();
     let foundProduct = cart.find(p => p._id == product._id && p.colors == product.colors);
     // si il y a un produit identique (id et couleur) alors on augmente la quantité
     if (foundProduct != undefined) {
@@ -85,7 +85,7 @@ function addCart(product) {
             // on revient à l'ancienne quantité
             let oldQuantity = foundProduct.quantity - product.quantity;
             foundProduct.quantity = oldQuantity;
-            alert ('La quantité pour ce produit est trop importante. Le maximum pour un produit est de 100 unités ! Pour voir la quantité totale pour ce produit consulté votre panier.')
+            alert ('Le maximum pour un produit est de 100 unités ! Vous avez déjà '+ oldQuantity +' unités pour ce produit dans votre panier.')
             // sinon on ajoute la quantité
         } else {
             alert ('La quantité pour ce produit a été modifiée dans votre panier, merci!')
