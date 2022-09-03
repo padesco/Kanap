@@ -68,22 +68,70 @@ if (cart === null) {
                                                                         </div>
                                                                     </article>`
             }
-        }
+        } 
     }
-    removeFromCart(product);
+    changeQuantity();
+    removeFromCart();
 }
 }
 
-function removeFromCart(product) {
-const deleteItem = document.querySelector('.deleteItem');
-deleteItem.addEventListener('click', () => {
-    let deleteProduct = deleteItem.closest('article');
-    console.log(deleteProduct);
-    if (window.confirm('Êtes-vous sûre de vouloir supprimer cet article?')) {
-        let cart = getCart();
-        let foundProduct = cart.find(p => p._id == product._id && p.colors == product.colors);
-        console.log(foundProduct);
-        window.localStorage.removeItem(foundProduct);
-    }
-})
+// Trouver le produit et le comparer 
+function foundProduct() {
+}
+
+// Sélection de la quantité
+function changeQuantity() {
+    let myNodeList = document.querySelectorAll('.itemQuantity');
+    myNodeList.forEach((product) => {
+        // écoute de l'événement sur l'élément (.itemQuantity)
+        product.addEventListener('change', function(event) {
+            // on récupère l'article concerné avec les détails du produits
+            let productSelected = product.closest('article');
+            // on récupère l'id et la couleur
+            let foundProduct = {
+                _id : productSelected.dataset.id,
+                colors : productSelected.dataset.color
+            };
+            // on récupère les éléments du local storage
+            let cart = getCart();
+            // on compare pour trouver le produit sélectionné
+            let sameProduct = cart.find(p => p._id == foundProduct._id && p.colors == foundProduct.colors);
+            console.log(sameProduct);
+            // on récupère la valeur de la cible
+            let quantityProduct = event.target.value;
+            sameProduct.quantity = parseInt(quantityProduct);
+            console.log(sameProduct);
+            if (
+                quantityProduct > 0
+                && quantityProduct <= 100
+            ) {
+                console.log("on remplace la quantité");
+                saveCart(cart);
+            } else {
+                alert ('Veuillez rentrer une quantité entre 1 et 100 !')
+            }
+        })
+    })
+}
+
+function removeFromCart() {
+    let myNodeList = document.querySelectorAll('.deleteItem');
+    myNodeList.forEach((product) => {
+        // écoute de l'événement sur l'élément (.deleteItem)
+        product.addEventListener('click', function(event) {
+            let productSelected = product.closest('article');
+            let foundProduct = {
+                _id : productSelected.dataset.id,
+                colors : productSelected.dataset.color
+            };
+            let cart = getCart();
+            let sameProduct = cart.find(p => p._id == foundProduct._id && p.colors == foundProduct.colors);
+            console.log(sameProduct);
+            if (window.confirm('Êtes-vous sûre de vouloir supprimer cet article?')) {
+                console.log("on supprime l'article");
+                localStorage.removeItem(sameProduct);
+                saveCart(cart);
+            }
+        })
+    })
 }

@@ -71,8 +71,13 @@ function getCart() {
     }
 }
 
+
+//--------------------------------------------------
+//----Envoi des éléments dans le local storage----//
+//--------------------------------------------------
+
 // fonction d'ajout de produit dans le local storage
-function addCart(product) {
+function addQuantity(product) {
     let cart = getCart();
     let foundProduct = cart.find(p => p._id == product._id && p.colors == product.colors);
     // si il y a un produit identique (id et couleur) alors on augmente la quantité
@@ -99,11 +104,6 @@ function addCart(product) {
     saveCart(cart);
 }
 
-
-//--------------------------------------------------
-//----Envoi des éléments dans le local storage----//
-//--------------------------------------------------
-
 // Clique pour ajouter au panier
 const addToCart = document.getElementById('addToCart');
 addToCart.addEventListener('click', () => {
@@ -119,7 +119,7 @@ addToCart.addEventListener('click', () => {
             quantity: quantitySelected
         };
         console.log(product);
-        addCart(product);
+        addQuantity(product);
     } else {
         // Alert si les conditions pour envoyer dans le panier ne sont pas respectées
         alert ('Veuillez renseigner une couleur et une quantité valide, entre 1 et 100 !');
