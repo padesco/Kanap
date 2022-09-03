@@ -70,17 +70,15 @@ if (cart === null) {
             }
         } 
     }
-    changeQuantity();
-    removeFromCart();
+    changeQuantity(itemsList);
+    removeFromCart(itemsList);
+    getNumberProduct();
+    getTotalPrice(itemsList);
 }
-}
-
-// Trouver le produit et le comparer 
-function foundProduct() {
 }
 
 // Sélection de la quantité
-function changeQuantity() {
+function changeQuantity(itemsList) {
     let myNodeList = document.querySelectorAll('.itemQuantity');
     myNodeList.forEach((product) => {
         // écoute de l'événement sur l'élément (.itemQuantity)
@@ -96,11 +94,9 @@ function changeQuantity() {
             let cart = getCart();
             // on compare pour trouver le produit sélectionné
             let sameProduct = cart.find(p => p._id == foundProduct._id && p.colors == foundProduct.colors);
-            console.log(sameProduct);
             // on récupère la valeur de la cible
             let quantityProduct = event.target.value;
             sameProduct.quantity = parseInt(quantityProduct);
-            console.log(sameProduct);
             if (
                 quantityProduct > 0
                 && quantityProduct <= 100
@@ -110,11 +106,13 @@ function changeQuantity() {
             } else {
                 alert ('Veuillez rentrer une quantité entre 1 et 100 !')
             }
+            getNumberProduct();
+            getTotalPrice(itemsList);
         })
     })
 }
 
-function removeFromCart() {
+function removeFromCart(itemsList) {
     let myNodeList = document.querySelectorAll('.deleteItem');
     myNodeList.forEach((product) => {
         // écoute de l'événement sur l'élément (.deleteItem)
@@ -132,6 +130,32 @@ function removeFromCart() {
                 localStorage.removeItem(sameProduct);
                 saveCart(cart);
             }
+            getNumberProduct();
+            getTotalPrice(itemsList);
         })
     })
+}
+
+function getNumberProduct() {
+    const totalQuantity = document.getElementById('totalQuantity');
+    let cart = getCart();
+    let number = 0;
+    for (product of cart) {
+        number += product.quantity;
+    }
+    return totalQuantity.textContent = `${number}`;
+}
+
+function getTotalPrice(itemsList) {
+    const totalPrice = document.getElementById('totalPrice');
+    let cart = getCart();
+    let total = 0;
+        for (item of itemsList)
+            for (product of cart) {
+                if (product._id === item._id) {
+                    total += product.quantity * item.price;
+                    console.log(product.quantity);
+                }
+                return totalPrice.textContent = `${total}`;
+    }
 }
