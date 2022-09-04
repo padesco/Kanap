@@ -1,3 +1,7 @@
+//--------------------------
+//----Le Local Storage----//
+//--------------------------
+
 // fonction pour enregistrer dans le local storage
 function saveCart(cart) {
     // transformation du tableau en chaîne de caractères
@@ -70,6 +74,7 @@ if (cart === null) {
             }
         } 
     }
+    // on envoie dans les différentes fonctions pour faire une boucle et mettre à jour automatiquement
     changeQuantity(itemsList);
     removeFromCart(itemsList);
     getNumberProduct();
@@ -77,85 +82,100 @@ if (cart === null) {
 }
 }
 
-// Sélection de la quantité
+// fonction pour modifier la quantité
 function changeQuantity(itemsList) {
+    // on sélectionne tous les éléments de '.itemQuantity' et on parcours chaque élément
     let myNodeList = document.querySelectorAll('.itemQuantity');
     myNodeList.forEach((product) => {
-        // écoute de l'événement sur l'élément (.itemQuantity)
+        // écoute de l'événement sur chaque élément '.itemQuantity'
         product.addEventListener('change', function(event) {
             // on récupère l'article concerné avec les détails du produits
             let productSelected = product.closest('article');
-            // on récupère l'id et la couleur
-            let foundProduct = {
-                _id : productSelected.dataset.id,
-                colors : productSelected.dataset.color
-            };
             // on récupère les éléments du local storage
             let cart = getCart();
             // on compare pour trouver le produit sélectionné
-            let sameProduct = cart.find(p => p._id == foundProduct._id && p.colors == foundProduct.colors);
-            // on récupère la valeur de la cible
+            let foundProduct = cart.find(p => p._id == productSelected.dataset.id
+                && p.colors == productSelected.dataset.color);
+            // on récupère la valeur de la cible et on récupère la valeur entière
             let quantityProduct = event.target.value;
-            sameProduct.quantity = parseInt(quantityProduct);
+            foundProduct.quantity = parseInt(quantityProduct);
+            // si les conditions de quantité sont respectées on envoie dans le localStorage
             if (
                 quantityProduct > 0
                 && quantityProduct <= 100
             ) {
-                console.log("on remplace la quantité");
                 saveCart(cart);
+            // sinon message d'alerte
             } else {
                 alert ('Veuillez rentrer une quantité entre 1 et 100 !')
             }
+            // on retourne vers les fonctions pour la quantité totale et le prix totale
             getNumberProduct();
             getTotalPrice(itemsList);
         })
     })
 }
 
+// fonction pour supprimer un produit
 function removeFromCart(itemsList) {
+    // on sélectionne tous les éléments de '.deleteItem' et on parcours chaque élément
     let myNodeList = document.querySelectorAll('.deleteItem');
     myNodeList.forEach((product) => {
-        // écoute de l'événement sur l'élément (.deleteItem)
+        // écoute de l'événement sur chaque élément '.deleteItem'
         product.addEventListener('click', function(event) {
+            // on récupère l'article concerné avec les détails du produits
             let productSelected = product.closest('article');
-            let foundProduct = {
-                _id : productSelected.dataset.id,
-                colors : productSelected.dataset.color
-            };
+            // on récupère les éléments du local storage
             let cart = getCart();
-            let sameProduct = cart.find(p => p._id == foundProduct._id && p.colors == foundProduct.colors);
-            console.log(sameProduct);
+            // on compare pour trouver le produit sélectionné
+            let foundProduct = cart.find(p => p._id == productSelected.dataset.id
+                && p.colors == productSelected.dataset.color);
+            console.log(foundProduct);
+            // si l'utilisateur confirme on supprime le produit
             if (window.confirm('Êtes-vous sûre de vouloir supprimer cet article?')) {
                 console.log("on supprime l'article");
-                localStorage.removeItem(sameProduct);
+                localStorage.removeItem(foundProduct);
                 saveCart(cart);
             }
+            // on retourne vers les fonctions pour la quantité totale et le prix totale
             getNumberProduct();
             getTotalPrice(itemsList);
         })
     })
 }
 
+// fonction pour calculer le total de produit
 function getNumberProduct() {
+    // sélection de l'emplacement de la quantité totale
     const totalQuantity = document.getElementById('totalQuantity');
+    // on récupère les éléments du localStorage
     let cart = getCart();
     let number = 0;
+    // on parcours le localStorage
     for (product of cart) {
+        // on additionne toute les quantité du localStorage
         number += product.quantity;
     }
-    return totalQuantity.textContent = `${number}`;
+    // on retourne le résultat à l'emplacement prévu dans la page
+    return totalQuantity.textContent = number;
 }
 
+// fonction pour calculer le total du prix
 function getTotalPrice(itemsList) {
+    // sélection de l'emplacement du prix total
     const totalPrice = document.getElementById('totalPrice');
-    let cart = getCart();
-    let total = 0;
+    // on récupère les éléments du localStorage
+        let cart = getCart();
+        let total = 0;
+        // on parcours l'API
         for (item of itemsList)
+            // on parcours le localStorage
             for (product of cart) {
-                if (product._id === item._id) {
+                // on compare les id pour trouver le prix correspondant au produit
+                if (item._id === product._id)
+                    // on multiplie la quantité par le prix correspondant de chaque produit du localStorage puis on les additionnes
                     total += product.quantity * item.price;
-                    console.log(product.quantity);
                 }
-                return totalPrice.textContent = `${total}`;
-    }
+                // on retourne le résultat à l'emplacement prévu dans la page
+                return totalPrice.textContent = total;
 }
