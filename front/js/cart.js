@@ -82,6 +82,11 @@ if (cart === null) {
 }
 }
 
+
+//-----------------------------------------------------
+//--------------Gestion du panier -------------------//
+//-----------------------------------------------------
+
 // fonction pour modifier la quantité
 function changeQuantity(itemsList) {
     // on sélectionne tous les éléments de '.itemQuantity' et on parcours chaque élément
@@ -179,3 +184,65 @@ function getTotalPrice(itemsList) {
                 // on retourne le résultat à l'emplacement prévu dans la page
                 return totalPrice.textContent = total;
 }
+
+//-------------------------------------------------------------
+//---------------------Formulaire----------------------------//
+//-------------------------------------------------------------
+
+// confirmation du prénom
+const firstName = document.getElementById('firstName');
+firstName.addEventListener('input', function(e) {
+    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)
+    && e.target.value.length >= 3 && e.target.value.length <=25) {
+        firstNameErrorMsg.innerHTML = 'Votre prénom est valide !';
+    } else {
+        firstNameErrorMsg.textContent = `Doit contenir entre 3 et 25 lettres, sans caractères spéciaux ou chiffres !`;
+    }
+})
+
+// confirmation du nom
+const lastName = document.getElementById('lastName');
+lastName.addEventListener('input', function(e) {
+    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)
+    && e.target.value.length >= 3 && e.target.value.length <=25) {
+        lastNameErrorMsg.innerHTML = 'Votre nom est valide !';
+    } else {
+        lastNameErrorMsg.textContent = `Doit contenir entre 3 et 25 lettres, sans caractères spéciaux ou chiffres !`;
+    }
+})
+
+// confirmation de la ville
+const city = document.getElementById('city');
+city.addEventListener('input', function(e) {
+    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)
+    && e.target.value.length >= 3 && e.target.value.length <= 25) {
+        cityErrorMsg.innerHTML = 'Votre ville est valide!';
+    } else {
+        cityErrorMsg.textContent = `Doit contenir entre 3 et 25 lettres, sans caractères spéciaux ou chiffres !`;
+    }
+})
+
+// confirmation de l'adresse
+const address = document.getElementById('address');
+address.addEventListener('input', function(e) {
+    if (e.target.value.match(/^[0-9]{1,6}[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,35}$/)
+    && e.target.value.length >= 3
+    && e.target.value.length <= 35) {
+        addressErrorMsg.innerHTML = 'Votre adresse est valide !';
+    } else {
+        addressErrorMsg.textContent = `Doit contenir entre 3 et 35 caractères et correspondre à une adresse valide, par exemple: 123 rue ...... !`;
+    }
+})
+// confirmation de l'email
+const email = document.getElementById('email');
+email.addEventListener('input', function(e) {
+    if (e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+    && e.target.value.length >= 5) {
+        emailErrorMsg.innerHTML = 'Votre email est valide !';
+    } else {
+        emailErrorMsg.textContent = `Votre email n'est pas valide, exemple: ----@---.-- !`;
+    }
+})
+
+// confirmation de la commande et envoie des informations à l'API
+const order = document.getElementById('order');
