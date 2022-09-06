@@ -28,14 +28,19 @@ fetch(`http://localhost:3000/api/products/${id}`)
         console.log("erreur chargement du produit");
     });
 
+// On crée un objet pour y mettre l'ID, la quantité et la couleur sélectionné
+let product = {
+    _id: id
+};
 
 // Choix de la couleur
 let colorSelected = document.getElementById('colors');
 // écoute de l'événement sur l'élément (#colors)
-colorSelected.addEventListener('input', function(event) {
+colorSelected.addEventListener('input', (event) => {
     // on récupère la valeur de la cible
     let colorProduct = event.target.value;
-    colorSelected = colorProduct;
+    // on ajoute à l'objet 'product'
+    product.colors = colorProduct;
 });
 
 // Sélection de la quantité
@@ -44,7 +49,8 @@ let quantitySelected = document.getElementById('quantity');
 quantitySelected.addEventListener('input', function(event) {
     // on récupère la valeur de la cible
     let quantityProduct = event.target.value;
-    quantitySelected = parseInt(quantityProduct);
+    // on ajoute à l'objet 'product'
+    product.quantity = parseInt(quantityProduct);
 });
 
 
@@ -109,19 +115,12 @@ const addToCart = document.getElementById('addToCart');
 addToCart.addEventListener('click', () => {
     // Condition pour pouvoir envoyer la sélection dans le panier
     if (
-        quantitySelected > 0
-        && quantitySelected <= 100
-        && colorSelected !== ''
-    ) { // On crée un objet pour y mettre l'ID, la quantité et la couleur sélectionné
-        let product = {
-            _id: id,
-            colors: colorSelected,
-            quantity: quantitySelected
-        };
+        product.quantity > 0 && product.quantity <= 100
+        && product.colors !== '' && product.colors !== undefined
+    ) { // On envoie l'objet 'product' dans la fonction 'addQuantity(product)'
         console.log(product);
         addQuantity(product);
-    } else {
-        // Alert si les conditions pour envoyer dans le panier ne sont pas respectées
+    } else { // Alert si les conditions pour envoyer dans le panier ne sont pas respectées
         alert ('Veuillez renseigner une couleur et une quantité valide, entre 1 et 100 !');
     }
 });

@@ -132,15 +132,15 @@ function removeFromCart(itemsList) {
             let productSelected = product.closest('article');
             // on récupère les éléments du local storage
             let cart = getCart();
-            // on compare pour trouver le produit sélectionné
-            let foundProduct = cart.find(p => p._id == productSelected.dataset.id
-                && p.colors == productSelected.dataset.color);
-            console.log(foundProduct);
             // si l'utilisateur confirme on supprime le produit
             if (window.confirm('Êtes-vous sûre de vouloir supprimer cet article?')) {
-                console.log("on supprime l'article");
-                localStorage.removeItem(foundProduct);
+                 // on utilise splice pour supprimer un objet de l'array 'cart' et on utilise findIndex pour trouver le produit sélectionné
+                let foundProduct = cart.splice(cart.findIndex(p => p._id == productSelected.dataset.id
+                && p.colors == productSelected.dataset.color),1);
+                // on sauvegarde le panier
                 saveCart(cart);
+                // on recharge la page pour mettre à jour le panier
+                return location.reload();
             }
             // on retourne vers les fonctions pour la quantité totale et le prix totale
             getNumberProduct();
@@ -189,60 +189,113 @@ function getTotalPrice(itemsList) {
 //---------------------Formulaire----------------------------//
 //-------------------------------------------------------------
 
+// on créé des objets pour récupérer les données utilisateurs remplies dans le formulaire
+let firstNameUser, lastNameUser, addressUser, cityUser, emailUser;
+
 // confirmation du prénom
 const firstName = document.getElementById('firstName');
+// on écoute l'élément "#firstname"
 firstName.addEventListener('input', function(e) {
-    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)
-    && e.target.value.length >= 3 && e.target.value.length <=25) {
+    // si le prénom respecte la validation regex
+    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)) {
         firstNameErrorMsg.innerHTML = 'Votre prénom est valide !';
-    } else {
+        // on récupère le résultat dans l'objet 'firstNameUser'
+        firstNameUser = e.target.value;
+    } else { // sinon message d'erreur
         firstNameErrorMsg.textContent = `Doit contenir entre 3 et 25 lettres, sans caractères spéciaux ou chiffres !`;
     }
 })
 
 // confirmation du nom
 const lastName = document.getElementById('lastName');
+// on écoute l'élément "#lastName"
 lastName.addEventListener('input', function(e) {
-    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)
-    && e.target.value.length >= 3 && e.target.value.length <=25) {
+    // si le nom respecte la validation regex
+    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)) {
         lastNameErrorMsg.innerHTML = 'Votre nom est valide !';
-    } else {
+        // on récupère le résultat dans l'objet 'lastNameUser'
+        lastNameUser = e.target.value;
+    } else { // sinon message d'erreur
         lastNameErrorMsg.textContent = `Doit contenir entre 3 et 25 lettres, sans caractères spéciaux ou chiffres !`;
     }
 })
 
 // confirmation de la ville
 const city = document.getElementById('city');
+// on écoute l'élément "#city"
 city.addEventListener('input', function(e) {
-    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)
-    && e.target.value.length >= 3 && e.target.value.length <= 25) {
+    // si la ville respecte la validation regex
+    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)) {
         cityErrorMsg.innerHTML = 'Votre ville est valide!';
-    } else {
+        // on récupère le résultat dans l'objet 'cityUser'
+        cityUser = e.target.value;
+    } else { // sinon message d'erreur
         cityErrorMsg.textContent = `Doit contenir entre 3 et 25 lettres, sans caractères spéciaux ou chiffres !`;
     }
 })
 
 // confirmation de l'adresse
 const address = document.getElementById('address');
+// on écoute l'élément "#address"
 address.addEventListener('input', function(e) {
-    if (e.target.value.match(/^[0-9]{1,6}[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,35}$/)
-    && e.target.value.length >= 3
-    && e.target.value.length <= 35) {
+    // si l'adresse respecte la validation regex
+    if (e.target.value.match(/^[0-9]{1,6}[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,35}$/)) {
         addressErrorMsg.innerHTML = 'Votre adresse est valide !';
-    } else {
+        // on récupère le résultat dans l'objet 'addressUser'
+        addressUser = e.target.value;
+    } else { // sinon message d'erreur
         addressErrorMsg.textContent = `Doit contenir entre 3 et 35 caractères et correspondre à une adresse valide, par exemple: 123 rue ...... !`;
     }
 })
 // confirmation de l'email
 const email = document.getElementById('email');
+// on écoute l'élément "#email"
 email.addEventListener('input', function(e) {
-    if (e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
-    && e.target.value.length >= 5) {
+    // si l'email respecte la validation regex
+    if (e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
         emailErrorMsg.innerHTML = 'Votre email est valide !';
-    } else {
+        // on récupère le résultat dans l'objet 'emailUser'
+        emailUser = e.target.value;
+    } else { // sinon message d'erreur
         emailErrorMsg.textContent = `Votre email n'est pas valide, exemple: ----@---.-- !`;
     }
 })
 
 // confirmation de la commande et envoie des informations à l'API
 const order = document.getElementById('order');
+order.addEventListener('click', async(e) => {
+    // on récupère les données du localStorage
+    let cart = getCart();
+    // si le panier n'est pas vide et le formulaire rempli correctement
+    if (cart !== null && firstNameUser !== undefined && lastNameUser !== undefined
+        && cityUser !== undefined && addressUser !== undefined && emailUser !== undefined) {
+        console.log(cart);
+        // on rassemble les informations dans un objet data
+        const userInformation = {
+            contact: {
+                firstName: firstNameUser,
+                lastName: lastNameUser,
+                city: cityUser,
+                address: addressUser,
+                email: emailUser,
+                },
+                order: cart,
+        };
+
+        // on envoie au back avec la méthode "POST" l'objet data 
+        let response = await fetch('http://localhost:3000/api/products/order', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(userInformation)
+        });
+        // on récupère la réponse du serveur dans result
+        let result = await response.json();
+        
+
+
+    } else { // sinon message explicatif
+        alert('Veuillez renseigner tous les champs du formulaire et/ou mettre un produit dans votre panier !');
+    }
+})
