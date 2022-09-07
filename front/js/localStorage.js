@@ -3,13 +3,13 @@
 //--------------------------
 
 // fonction pour enregistrer dans le local storage
-export function saveCart(cart) {
+function saveCart(cart) {
     // transformation du tableau en chaîne de caractères
     localStorage.setItem("cart", JSON.stringify(cart));
 }
 
 // fonction pour récupérer les données du local storage
-export function getCart() {
+function getCart() {
     let cart = [];
     cart = localStorage.getItem("cart");
     // si il n'y a rien retourne un tableau vide

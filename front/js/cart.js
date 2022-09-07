@@ -32,7 +32,7 @@ fetch("http://localhost:3000/api/products")
  })
  // Message d'erreur en cas de problème
  .catch( function(err) {
-     let error = document.querySelector("#cart__items");
+     let error = document.querySelector("main");
      error.innerHTML = `<h2 style="text-align:center">Une erreur est survenue, veuillez nous en excuser! <br> Notre équipe met tout en oeuvre pour régler ce problème dans les plus bref délais.</h2>`;
  });
 
@@ -41,8 +41,8 @@ function productCart(itemsList) {
     // on récupère les éléments du localStorage
     let cart = getCart();
 // Si le panier est vide
-if (cart === null) {
-    document.querySelector("main").innerHTML = `<h2 style="text-align:center">Votre panier est vide.</h2>`;
+if (cart == null || cart == '') {
+    document.querySelector("main").innerHTML = `<h2 style="text-align:center">Votre panier est vide !</h2>`;
 } else {
     // Si le panier n'est pas vide: on récupère les produits
     for (item of itemsList) {
@@ -262,40 +262,30 @@ email.addEventListener('input', function(e) {
 })
 
 // confirmation de la commande et envoie des informations à l'API
-const order = document.getElementById('order');
-order.addEventListener('click', async(e) => {
+const order = document.getElementById('email');
+order.addEventListener('input', async(e) => {
+    e.preventDefault();
     // on récupère les données du localStorage
     let cart = getCart();
     // si le panier n'est pas vide et le formulaire rempli correctement
     if (cart !== null && firstNameUser !== undefined && lastNameUser !== undefined
         && cityUser !== undefined && addressUser !== undefined && emailUser !== undefined) {
-        console.log(cart);
         // on rassemble les informations dans un objet data
         const userInformation = {
-            contact: {
-                firstName: firstNameUser,
-                lastName: lastNameUser,
-                city: cityUser,
-                address: addressUser,
-                email: emailUser,
-                },
-                order: cart,
-        };
-
+            contact: {firstName: firstNameUser, lastName: lastNameUser,
+                address: addressUser, city: cityUser, email: emailUser},
+            products: cart };
+        console.log(userInformation);
+        
         // on envoie au back avec la méthode "POST" l'objet data 
         let response = await fetch('http://localhost:3000/api/products/order', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json;charset=utf-8'
-            },
+            headers: {'Content-Type': 'application/json;charset=utf-8'},
             body: JSON.stringify(userInformation)
         });
         // on récupère la réponse du serveur dans result
         let result = await response.json();
-        
+        console.log(result);
 
-
-    } else { // sinon message explicatif
-        alert('Veuillez renseigner tous les champs du formulaire et/ou mettre un produit dans votre panier !');
-    }
+    }   
 })
