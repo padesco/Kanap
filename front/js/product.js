@@ -1,21 +1,15 @@
-// Array pour le panier
-const productSelection = {};
 // on récupère l'url courante
 const urlId = window.location.search;
 // la propriété "urlSearchParams" de "urlId" nous retourne un objet de type "URLSearchParams"
 const urlSearchParams = new URLSearchParams(urlId);
 // on récupére la valeur de 'id'
 const id = urlSearchParams.get('id');
-console.log(id);
-productSelection.id = id;
-
 
 // créer une requête API fetch pour chaque 'id'
 fetch(`http://localhost:3000/api/products/${id}`)
     // récupérer et interpréter le résultat au format JSON
     .then( data => data.json())
     .then( productId => {
-        console.log(productId)
         document.querySelector('.item__img').innerHTML = `<img src="${productId.imageUrl}" alt="${productId.altTxt}">`;
         document.querySelector('title').textContent = `${productId.name}`
         document.getElementById('title').textContent = `${productId.name}`;
@@ -26,47 +20,107 @@ fetch(`http://localhost:3000/api/products/${id}`)
             document.getElementById('colors').innerHTML += `<option value="${color}">${color}</option>`;
         }
 
+    })
+    // Message d'erreur en cas de problème
+    .catch( function(err) {
+        let error = document.querySelector("main");
+        error.innerHTML = `<h2 style="text-align:center">Une erreur est survenue, veuillez nous en excuser! <br> Notre équipe met tout en oeuvre pour régler ce problème dans les plus bref délais.</h2>`;
     });
 
+// On crée un objet pour y mettre l'ID, la quantité et la couleur sélectionné
+let product = {
+    _id: id
+};
 
 // Choix de la couleur
-let colorSelection = document.getElementById('colors');
+let colorSelected = document.getElementById('colors');
 // écoute de l'événement sur l'élément (#colors)
-colorSelection.addEventListener('input', function(event) {
+colorSelected.addEventListener('input', (event) => {
     // on récupère la valeur de la cible
     let colorProduct = event.target.value;
-    // on ajoute la couleur à l'object productSelection
-    productSelection.color = colorProduct;
-    console.log(productSelection.color);
-    event.preventDefault();
+    // on ajoute à l'objet 'product'
+    product.colors = colorProduct;
 });
 
 // Sélection de la quantité
-let quantitySelection = document.getElementById('quantity');
+let quantitySelected = document.getElementById('quantity');
 // écoute de l'événement sur l'élément (#quantity)
-quantitySelection.addEventListener('input', function(event) {
+quantitySelected.addEventListener('input', function(event) {
     // on récupère la valeur de la cible
     let quantityProduct = event.target.value;
-    // on ajoute la quantité à l'object productSelection
-    productSelection.quantity = quantityProduct;
-    console.log(productSelection.quantity);
-    event.preventDefault();
+    // on ajoute à l'objet 'product'
+    product.quantity = parseInt(quantityProduct);
 });
 
-// Clique pour ajouter au panier
-let addToCart = document.getElementById('addToCart');
-addToCart.addEventListener('click', () => {
-    if (
-        productSelection.quantity > 0
-        && productSelection.quantity <= 100
-        && productSelection.color !== ''
-    ) {
-        console.log(productSelection);
-        alert('Votre sélection a été ajouté au panier, merci !');
+
+//--------------------------
+//----Le Local Storage----//
+//--------------------------
+
+// fonction pour enregistrer dans le local storage
+function saveCart(cart) {
+    // transformation du tableau en chaîne de caractères
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// fonction pour récupérer les données du local storage
+function getCart() {
+    let cart = [];
+    cart = localStorage.getItem("cart");
+    // si il n'y a rien retourne un tableau vide
+    if (cart == null) {
+        return [];
+    // sinon retourne la chaîne de caractère en tableau
     } else {
-        alert (
-            'Veuillez renseigner une couleur et une quantité valide, entre 1 et 100 !'
-        );
+        return JSON.parse(cart);
+    }
+}
+
+
+//--------------------------------------------------
+//----Envoi des éléments dans le local storage----//
+//--------------------------------------------------
+
+// fonction d'ajout de produit dans le local storage
+function addQuantity(product) {
+    let cart = getCart();
+    let foundProduct = cart.find(p => p._id == product._id && p.colors == product.colors);
+    // si il y a un produit identique (id et couleur) alors on augmente la quantité
+    if (foundProduct != undefined) {
+        // on définie la nouvelle quantité
+        let newQuantity = foundProduct.quantity + product.quantity;
+        foundProduct.quantity = newQuantity;
+        // si la quantité totale pour un produit fait plus de 100
+        if (foundProduct.quantity > 100) {
+            // on revient à l'ancienne quantité
+            let oldQuantity = foundProduct.quantity - product.quantity;
+            foundProduct.quantity = oldQuantity;
+            alert ('Le maximum pour un produit est de 100 unités ! Vous avez déjà '+ oldQuantity +' unités pour ce produit dans votre panier.')
+            // sinon on ajoute la quantité
+        } else {
+            alert ('La quantité pour ce produit a été modifiée dans votre panier, merci!')
+        }
+    // sinon on rajoute un autre produit dans le local storage
+    } else {
+        cart.push(product);
+        alert ('Le produit vient d\'être ajouté à votre panier, merci !')
+    }
+    // on envoi dans le local storage
+    saveCart(cart);
+}
+
+// Clique pour ajouter au panier
+const addToCart = document.getElementById('addToCart');
+addToCart.addEventListener('click', () => {
+    // Condition pour pouvoir envoyer la sélection dans le panier
+    if (
+        product.quantity > 0 && product.quantity <= 100
+        && product.colors !== '' && product.colors !== undefined
+    ) { // On envoie l'objet 'product' dans la fonction 'addQuantity(product)'
+        console.log(product);
+        addQuantity(product);
+    } else { // Alert si les conditions pour envoyer dans le panier ne sont pas respectées
+        alert ('Veuillez renseigner une couleur et une quantité valide, entre 1 et 100 !');
     }
 });
 
