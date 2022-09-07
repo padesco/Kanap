@@ -262,19 +262,25 @@ email.addEventListener('input', function(e) {
 })
 
 // confirmation de la commande et envoie des informations à l'API
-const order = document.getElementById('email');
-order.addEventListener('input', async(e) => {
+const order = document.getElementById('order');
+order.addEventListener('click', async(e) => {
     e.preventDefault();
     // on récupère les données du localStorage
     let cart = getCart();
     // si le panier n'est pas vide et le formulaire rempli correctement
     if (cart !== null && firstNameUser !== undefined && lastNameUser !== undefined
         && cityUser !== undefined && addressUser !== undefined && emailUser !== undefined) {
+
+        // on récupère les id de chaque produit
+        let productId = [];
+        for (let product of cart){
+            productId.push(product._id);
+        }
         // on rassemble les informations dans un objet data
         const userInformation = {
             contact: {firstName: firstNameUser, lastName: lastNameUser,
                 address: addressUser, city: cityUser, email: emailUser},
-            products: cart };
+            products: productId };
         console.log(userInformation);
         
         // on envoie au back avec la méthode "POST" l'objet data 
@@ -287,5 +293,9 @@ order.addEventListener('input', async(e) => {
         let result = await response.json();
         console.log(result);
 
-    }   
+        // on redirige l'utilisateur sur la page Confirmation, en passant l'id de commande dans l'URL
+        document.location.href = `confirmation.html?orderId=${result.orderId}`;
+    } else { // sinon message explicatif
+        alert('Veuillez renseigner tous les champs du formulaire !');
+    }
 })
