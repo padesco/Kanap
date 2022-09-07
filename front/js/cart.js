@@ -211,12 +211,12 @@ const lastName = document.getElementById('lastName');
 // on écoute l'élément "#lastName"
 lastName.addEventListener('input', function(e) {
     // si le nom respecte la validation regex
-    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)) {
+    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{1,25}$/)) {
         lastNameErrorMsg.innerHTML = 'Votre nom est valide !';
         // on récupère le résultat dans l'objet 'lastNameUser'
         lastNameUser = e.target.value;
     } else { // sinon message d'erreur
-        lastNameErrorMsg.textContent = `Doit contenir entre 3 et 25 lettres, sans caractères spéciaux ou chiffres !`;
+        lastNameErrorMsg.textContent = `Doit contenir entre 1 et 25 lettres, sans caractères spéciaux ou chiffres !`;
     }
 })
 
@@ -225,12 +225,12 @@ const city = document.getElementById('city');
 // on écoute l'élément "#city"
 city.addEventListener('input', function(e) {
     // si la ville respecte la validation regex
-    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)) {
+    if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,50}$/)) {
         cityErrorMsg.innerHTML = 'Votre ville est valide!';
         // on récupère le résultat dans l'objet 'cityUser'
         cityUser = e.target.value;
     } else { // sinon message d'erreur
-        cityErrorMsg.textContent = `Doit contenir entre 3 et 25 lettres, sans caractères spéciaux ou chiffres !`;
+        cityErrorMsg.textContent = `Doit contenir entre 3 et 50 lettres, sans caractères spéciaux ou chiffres !`;
     }
 })
 
@@ -239,12 +239,12 @@ const address = document.getElementById('address');
 // on écoute l'élément "#address"
 address.addEventListener('input', function(e) {
     // si l'adresse respecte la validation regex
-    if (e.target.value.match(/^[0-9]{1,6}[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,35}$/)) {
+    if (e.target.value.match(/^[0-9]{1,6}[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,60}$/)) {
         addressErrorMsg.innerHTML = 'Votre adresse est valide !';
         // on récupère le résultat dans l'objet 'addressUser'
         addressUser = e.target.value;
     } else { // sinon message d'erreur
-        addressErrorMsg.textContent = `Doit contenir entre 3 et 35 caractères et correspondre à une adresse valide, par exemple: 123 rue ...... !`;
+        addressErrorMsg.textContent = `Doit contenir entre 3 et 60 caractères et correspondre à une adresse valide, par exemple: 123 rue ...... !`;
     }
 })
 // confirmation de l'email
@@ -252,7 +252,7 @@ const email = document.getElementById('email');
 // on écoute l'élément "#email"
 email.addEventListener('input', function(e) {
     // si l'email respecte la validation regex
-    if (e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+    if (e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,5}$/)) {
         emailErrorMsg.innerHTML = 'Votre email est valide !';
         // on récupère le résultat dans l'objet 'emailUser'
         emailUser = e.target.value;
@@ -281,7 +281,6 @@ order.addEventListener('click', async(e) => {
             contact: {firstName: firstNameUser, lastName: lastNameUser,
                 address: addressUser, city: cityUser, email: emailUser},
             products: productId };
-        console.log(userInformation);
         
         // on envoie au back avec la méthode "POST" l'objet data 
         let response = await fetch('http://localhost:3000/api/products/order', {
@@ -291,7 +290,6 @@ order.addEventListener('click', async(e) => {
         });
         // on récupère la réponse du serveur dans result
         let result = await response.json();
-        console.log(result);
 
         // on redirige l'utilisateur sur la page Confirmation, en passant l'id de commande dans l'URL
         document.location.href = `confirmation.html?orderId=${result.orderId}`;

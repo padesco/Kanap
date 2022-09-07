@@ -117,7 +117,6 @@ addToCart.addEventListener('click', () => {
         product.quantity > 0 && product.quantity <= 100
         && product.colors !== '' && product.colors !== undefined
     ) { // On envoie l'objet 'product' dans la fonction 'addQuantity(product)'
-        console.log(product);
         addQuantity(product);
     } else { // Alert si les conditions pour envoyer dans le panier ne sont pas respectées
         alert ('Veuillez renseigner une couleur et une quantité valide, entre 1 et 100 !');
