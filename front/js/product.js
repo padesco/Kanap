@@ -123,4 +123,3 @@ addToCart.addEventListener('click', () => {
         alert ('Veuillez renseigner une couleur et une quantité valide, entre 1 et 100 !');
     }
 });
-
