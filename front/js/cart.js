@@ -199,10 +199,11 @@ firstName.addEventListener('input', function(e) {
     // si le prénom respecte la validation regex
     if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)) {
         firstNameErrorMsg.innerHTML = 'Votre prénom est valide !';
+        document.getElementById('firstNameErrorMsg').style.color = 'lightgreen';
         // on récupère le résultat dans l'objet 'firstNameUser'
         firstNameUser = e.target.value;
     } else { // sinon message d'erreur
-        firstNameErrorMsg.textContent = `Doit contenir entre 3 et 25 lettres, sans caractères spéciaux ou chiffres !`;
+        firstNameErrorMsg.textContent = `Doit contenir entre 3 et 25 lettres, sans caractères spéciaux ou chiffres !`; 
     }
 })
 
@@ -213,6 +214,7 @@ lastName.addEventListener('input', function(e) {
     // si le nom respecte la validation regex
     if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{1,25}$/)) {
         lastNameErrorMsg.innerHTML = 'Votre nom est valide !';
+        document.getElementById('lastNameErrorMsg').style.color = 'lightgreen';
         // on récupère le résultat dans l'objet 'lastNameUser'
         lastNameUser = e.target.value;
     } else { // sinon message d'erreur
@@ -227,6 +229,7 @@ city.addEventListener('input', function(e) {
     // si la ville respecte la validation regex
     if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,50}$/)) {
         cityErrorMsg.innerHTML = 'Votre ville est valide!';
+        document.getElementById('cityErrorMsg').style.color = 'lightgreen';
         // on récupère le résultat dans l'objet 'cityUser'
         cityUser = e.target.value;
     } else { // sinon message d'erreur
@@ -241,6 +244,7 @@ address.addEventListener('input', function(e) {
     // si l'adresse respecte la validation regex
     if (e.target.value.match(/^[0-9]{1,6}[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,60}$/)) {
         addressErrorMsg.innerHTML = 'Votre adresse est valide !';
+        document.getElementById('addressErrorMsg').style.color = 'lightgreen';
         // on récupère le résultat dans l'objet 'addressUser'
         addressUser = e.target.value;
     } else { // sinon message d'erreur
@@ -254,6 +258,7 @@ email.addEventListener('input', function(e) {
     // si l'email respecte la validation regex
     if (e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,5}$/)) {
         emailErrorMsg.innerHTML = 'Votre email est valide !';
+        document.getElementById('emailErrorMsg').style.color = 'lightgreen';
         // on récupère le résultat dans l'objet 'emailUser'
         emailUser = e.target.value;
     } else { // sinon message d'erreur
