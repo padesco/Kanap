@@ -198,12 +198,12 @@ const firstName = document.getElementById('firstName');
 firstName.addEventListener('input', function(e) {
     // si le prénom respecte la validation regex
     if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,25}$/)) {
-        firstNameErrorMsg.innerHTML = 'Votre prénom est valide !';
-        document.getElementById('firstNameErrorMsg').style.color = 'lightgreen';
+        firstNameErrorMsg.innerHTML = '<font color="lightgreen">Votre prénom est valide !</font>';
         // on récupère le résultat dans l'objet 'firstNameUser'
         firstNameUser = e.target.value;
     } else { // sinon message d'erreur
-        firstNameErrorMsg.textContent = `Doit contenir entre 3 et 25 lettres, sans caractères spéciaux ou chiffres !`; 
+        firstNameErrorMsg.textContent = `Doit contenir entre 3 et 25 lettres, sans caractères spéciaux ou chiffres !`;
+        firstNameUser = undefined;
     }
 })
 
@@ -213,12 +213,12 @@ const lastName = document.getElementById('lastName');
 lastName.addEventListener('input', function(e) {
     // si le nom respecte la validation regex
     if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{1,25}$/)) {
-        lastNameErrorMsg.innerHTML = 'Votre nom est valide !';
-        document.getElementById('lastNameErrorMsg').style.color = 'lightgreen';
+        lastNameErrorMsg.innerHTML = '<font color="lightgreen">Votre nom est valide !</font>';
         // on récupère le résultat dans l'objet 'lastNameUser'
         lastNameUser = e.target.value;
     } else { // sinon message d'erreur
         lastNameErrorMsg.textContent = `Doit contenir entre 1 et 25 lettres, sans caractères spéciaux ou chiffres !`;
+        lastNameUser = undefined;
     }
 })
 
@@ -228,12 +228,12 @@ const city = document.getElementById('city');
 city.addEventListener('input', function(e) {
     // si la ville respecte la validation regex
     if (e.target.value.match(/^[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,50}$/)) {
-        cityErrorMsg.innerHTML = 'Votre ville est valide!';
-        document.getElementById('cityErrorMsg').style.color = 'lightgreen';
+        cityErrorMsg.innerHTML = '<font color="lightgreen">Votre ville est valide !</font>';
         // on récupère le résultat dans l'objet 'cityUser'
         cityUser = e.target.value;
     } else { // sinon message d'erreur
         cityErrorMsg.textContent = `Doit contenir entre 3 et 50 lettres, sans caractères spéciaux ou chiffres !`;
+        cityUser = undefined;
     }
 })
 
@@ -243,12 +243,12 @@ const address = document.getElementById('address');
 address.addEventListener('input', function(e) {
     // si l'adresse respecte la validation regex
     if (e.target.value.match(/^[0-9]{1,6}[a-zA-Záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ.,'’\s-]{3,60}$/)) {
-        addressErrorMsg.innerHTML = 'Votre adresse est valide !';
-        document.getElementById('addressErrorMsg').style.color = 'lightgreen';
+        addressErrorMsg.innerHTML = '<font color="lightgreen">Votre adresse est valide !</font>';
         // on récupère le résultat dans l'objet 'addressUser'
         addressUser = e.target.value;
     } else { // sinon message d'erreur
         addressErrorMsg.textContent = `Doit contenir entre 3 et 60 caractères et correspondre à une adresse valide, par exemple: 123 rue ...... !`;
+        addressUser = undefined;
     }
 })
 // confirmation de l'email
@@ -257,12 +257,12 @@ const email = document.getElementById('email');
 email.addEventListener('input', function(e) {
     // si l'email respecte la validation regex
     if (e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,5}$/)) {
-        emailErrorMsg.innerHTML = 'Votre email est valide !';
-        document.getElementById('emailErrorMsg').style.color = 'lightgreen';
+        emailErrorMsg.innerHTML = '<font color="lightgreen">Votre email est valide !</font>';
         // on récupère le résultat dans l'objet 'emailUser'
         emailUser = e.target.value;
     } else { // sinon message d'erreur
         emailErrorMsg.textContent = `Votre email n'est pas valide, exemple: ----@---.-- !`;
+        emailUser = undefined;
     }
 })
 
